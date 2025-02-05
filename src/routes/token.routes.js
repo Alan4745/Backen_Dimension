@@ -61,6 +61,11 @@ api.put(
   controllerToken.redeemTicketAdrenaline
 );
 
+api.put(
+  "/redeemTicketPizzaCampero/:idbuyer",
+  controllerToken.redeemTicketPizzaCampero
+);
+
 // metodo actualizado 🆗
 api.put(
   "/burnTicket/:idTicket",

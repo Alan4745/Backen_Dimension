@@ -57,7 +57,7 @@ async function RegistrarData(req, res) {
       console.log("El DPI de Guatemala debe tener exactamente 13 dígitos.");
       return res.status(400).json({
         success: false,
-        message: "El DPI de Guatemala debe tener exactamente 13 dígitos.",
+        message: "El DPI debe tener exactamente 13 dígitos.",
       });
     }
 
@@ -65,7 +65,7 @@ async function RegistrarData(req, res) {
       console.log("El DUI de El Salvador debe tener exactamente 9 dígitos.");
       return res.status(400).json({
         success: false,
-        message: "El DUI de El Salvador debe tener exactamente 9 dígitos.",
+        message: "DUI debe tener exactamente 9 dígitos.",
       });
     }
 
