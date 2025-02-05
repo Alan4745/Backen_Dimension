@@ -55,11 +55,6 @@ api.put(
   [md_autenticacion.Auth],
   controllerToken.redeemTicket
 );
-api.put("/redeemTiceketPepsi/:idbuyer", controllerToken.redeemTicketPepsi);
-api.put(
-  "/redeemTicketAdrenaline/:idbuyer",
-  controllerToken.redeemTicketAdrenaline
-);
 
 api.put(
   "/redeemTicketPizzaCampero/:idbuyer",
