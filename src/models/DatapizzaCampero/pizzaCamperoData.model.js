@@ -8,10 +8,7 @@ const dataPizzaCamperoSchema = new Schema(
       type: String,
       required: true,
     },
-    lastname: {
-      type: String,
-      required: true,
-    },
+
     email: {
       type: String,
       required: true,
@@ -40,16 +37,6 @@ const dataPizzaCamperoSchema = new Schema(
     // Nuevo campo para DPI
     dpi: {
       type: String,
-      required: true,
-    },
-    // Nuevo campo para edad
-    age: {
-      type: Number,
-      required: true,
-    },
-    // Campo para fecha de nacimiento en inglés
-    dateOfBirth: {
-      type: Date,
       required: true,
     },
     // Nuevo campo para premio en inglés
