@@ -7,7 +7,6 @@ async function RegistrarData(req, res) {
 
     if (
       !name ||
-      !lastname ||
       !email ||
       !phone ||
       !dpi ||
