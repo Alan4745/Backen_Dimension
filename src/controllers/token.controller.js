@@ -613,18 +613,18 @@ async function redeemTicketPizzaCampero(req, res) {
     // Definir las categorías y sus probabilidades según el país
     const categoriesByCountry = {
       Guatemala: {
-        "PS5-G": 0.0005264,
+        "PS5-G": 0.00053,
         "GIFTCARD-G-25": 0.00526,
-        "GIFTCARD-G-50": 0.00263,
-        "GIFTCARD-G-100": 0.001315,
-        "PIZZA-G": 50,
+        "GIFTCARD-G-50": 0.00369,
+        "GIFTCARD-G-100": 0.00421,
+        "PIZZA-G": 0.03896,
       },
       "El Salvador": {
-        "PS5-S": 25,
-        "GIFTCARD-S-25": 25,
-        "GIFTCARD-S-50": 12.5,
-        "GIFTCARD-S-100": 6.25,
-        "PIZZA-S": 50,
+        "PS5-S": 0.0006988,
+        "GIFTCARD-S-25": 0.00699,
+        "GIFTCARD-S-50": 0.00559,
+        "GIFTCARD-S-100": 0.00489,
+        "PIZZA-S": 0.0517,
       },
     };
 
