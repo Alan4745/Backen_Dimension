@@ -598,30 +598,32 @@ async function redeemTicketPizzaCampero(req, res) {
       _id: idbuyer,
     });
     if (!pizzaCamperoData) {
-      console.log("No se encontró el comprador con ID:", idbuyer);
+      console.log("No se encontró el Usuario con ID:", idbuyer);
       return res.status(404).json({ message: "No se encontró el comprador" });
     }
 
     // Verificar si el comprador ya ha ganado
     if (pizzaCamperoData.winner === true) {
-      console.log(
-        "El comprador ya ha ganado un premio y no puede canjear más tickets."
-      );
+      console.log("El comprador ya ha ganado un premio.");
       return res.status(400).json({
-        message: "Ya has ganado un premio. No puedes canjear más tickets.",
+        message: "Ya has ganado un premio.",
       });
     }
 
     // Definir las categorías y sus probabilidades según el país
     const categoriesByCountry = {
       Guatemala: {
-        "PS5-G": 30,
-        "GIFTCARD-G": 20,
+        "PS5-G": 0.0005264,
+        "GIFTCARD-G-25": 0.00526,
+        "GIFTCARD-G-50": 0.00263,
+        "GIFTCARD-G-100": 0.001315,
         "PIZZA-G": 50,
       },
       "El Salvador": {
         "PS5-S": 25,
-        "GIFTCARD-S": 25,
+        "GIFTCARD-S-25": 25,
+        "GIFTCARD-S-50": 12.5,
+        "GIFTCARD-S-100": 6.25,
         "PIZZA-S": 50,
       },
     };
@@ -685,20 +687,28 @@ async function redeemTicketPizzaCampero(req, res) {
     // Actualizar el campo winner en el documento PizzaCamperoData
     pizzaCamperoData.winner = [
       "PS5-G",
-      "GIFTCARD-G",
+      "GIFTCARD-G-25",
+      "GIFTCARD-G-50",
+      "GIFTCARD-G-100",
       "PIZZA-G",
       "PS5-S",
-      "GIFTCARD-S",
+      "GIFTCARD-S-25",
+      "GIFTCARD-S-50",
+      "GIFTCARD-S-100",
       "PIZZA-S",
     ].includes(category);
     pizzaCamperoData.hasRegistered = true;
     if (
       [
         "PS5-G",
-        "GIFTCARD-G",
+        "GIFTCARD-G-25",
+        "GIFTCARD-G-50",
+        "GIFTCARD-G-100",
         "PIZZA-G",
         "PS5-S",
-        "GIFTCARD-S",
+        "GIFTCARD-S-25",
+        "GIFTCARD-S-50",
+        "GIFTCARD-S-100",
         "PIZZA-S",
       ].includes(category)
     ) {
