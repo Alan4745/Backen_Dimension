@@ -613,7 +613,7 @@ async function redeemTicketPizzaCampero(req, res) {
     // Definir las categorías y sus probabilidades según el país
     const categoriesByCountry = {
       Guatemala: {
-        "PS5-G": 0.00053,
+        "PS5-G": 100,
         "GIFTCARD-G-25": 0.00526,
         "GIFTCARD-G-50": 0.00369,
         "GIFTCARD-G-100": 0.00421,
