@@ -105,6 +105,69 @@ async function RegistrarData(req, res) {
   }
 }
 
+async function ObtenerGanadores(req, res) {
+  try {
+    const { filtro, pais, page = 1, limit = 100 } = req.query;
+
+    let match = { winner: true };
+    if (pais && (pais === "Guatemala" || pais === "El Salvador")) {
+      match.country = pais;
+    }
+
+    if (filtro && filtro !== "todos") {
+      match.prize = filtro;
+    } else if (filtro === "todos") {
+      match = {}; // Obtener todos los registros sin filtrar por winner
+    }
+
+    const skip = (page - 1) * limit;
+
+    const pipeline = [
+      { $match: match },
+      { $skip: skip },
+      { $limit: parseInt(limit) },
+      {
+        $addFields: {
+          totalTicketsCollected: {
+            $size: { $ifNull: ["$ticketsCollected", []] },
+          },
+        },
+      },
+      {
+        $project: {
+          ticketsCollected: 0, // Excluir el campo ticketsCollected
+        },
+      },
+    ];
+
+    const datos = await PizzaCamperoDataModel.aggregate(pipeline);
+
+    const totalParticipaciones = datos.reduce(
+      (acc, curr) => acc + curr.totalTicketsCollected,
+      0
+    );
+
+    const totalRegistros = await PizzaCamperoDataModel.countDocuments(match);
+
+    res.status(200).json({
+      success: true,
+      data: datos,
+      totalParticipaciones,
+      totalRegistros,
+      totalPages: Math.ceil(totalRegistros / limit),
+      currentPage: parseInt(page),
+    });
+  } catch (error) {
+    console.error("Error al obtener los datos:", error);
+    res.status(500).json({
+      success: false,
+      message:
+        "Error interno del servidor. Por favor, inténtelo de nuevo más tarde.",
+    });
+  }
+}
+
 module.exports = {
   RegistrarData,
+  ObtenerGanadores,
 };
