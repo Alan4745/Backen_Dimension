@@ -610,6 +610,23 @@ async function redeemTicketPizzaCampero(req, res) {
       });
     }
 
+    // const categoriesByCountry = {
+    //   Guatemala: {
+    //     "PS5-G": 0.00053,
+    //     "GIFTCARD-G-25": 0.00526,
+    //     "GIFTCARD-G-50": 0.00369,
+    //     "GIFTCARD-G-100": 0.00421,
+    //     "PIZZA-G": 0.03896,
+    //   },
+    //   "El Salvador": {
+    //     "PS5-S": 0.0006988,
+    //     "GIFTCARD-S-25": 0.00699,
+    //     "GIFTCARD-S-50": 0.00559,
+    //     "GIFTCARD-S-100": 0.00489,
+    //     "PIZZA-S": 0.0517,
+    //   },
+    // };
+
     // Definir las categorías y sus probabilidades según el país
     const categoriesByCountry = {
       Guatemala: {
@@ -654,7 +671,7 @@ async function redeemTicketPizzaCampero(req, res) {
     let ticket = await TokenCollection.findOne({
       canjeado: false,
       category: category,
-      author: "6712c51f0fbdd0960c77ade3",
+      author: "679bab6ef2a4d19079f7a4d2",
     });
 
     // Si no hay tickets de la categoría determinada, buscar un ticket de "participacion"
@@ -665,7 +682,7 @@ async function redeemTicketPizzaCampero(req, res) {
       ticket = await TokenCollection.findOne({
         canjeado: false,
         category: "participacion",
-        author: "6712c51f0fbdd0960c77ade3",
+        author: "679bab6ef2a4d19079f7a4d2",
       });
       category = "participacion"; // Confirmar que encontramos un ticket de "participacion"
     }
