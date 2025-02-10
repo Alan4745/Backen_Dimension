@@ -639,7 +639,7 @@ async function redeemTicketPizzaCampero(req, res) {
       "El Salvador": {
         "PS5-S": 0.0006988,
         "GIFTCARD-S-100": 0.01,
-        "GIFTCARD-S-50": 0.4,
+        "GIFTCARD-S-50": 0.04,
         "GIFTCARD-S-25": 0.05,
         "PIZZA-S": 0.15,
       },
