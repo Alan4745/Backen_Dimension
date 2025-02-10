@@ -631,17 +631,17 @@ async function redeemTicketPizzaCampero(req, res) {
     const categoriesByCountry = {
       Guatemala: {
         "PS5-G": 0.00053,
-        "GIFTCARD-G-25": 0.1,
-        "GIFTCARD-G-50": 0.05,
         "GIFTCARD-G-100": 0.01,
-        "PIZZA-G": 0.2,
+        "GIFTCARD-G-50": 0.04,
+        "GIFTCARD-G-25": 0.05,
+        "PIZZA-G": 0.15,
       },
       "El Salvador": {
         "PS5-S": 0.0006988,
-        "GIFTCARD-S-25": 0.1,
-        "GIFTCARD-S-50": 0.05,
         "GIFTCARD-S-100": 0.01,
-        "PIZZA-S": 0.2,
+        "GIFTCARD-S-50": 0.4,
+        "GIFTCARD-S-25": 0.05,
+        "PIZZA-S": 0.15,
       },
     };
 
