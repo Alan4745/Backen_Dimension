@@ -631,17 +631,17 @@ async function redeemTicketPizzaCampero(req, res) {
     const categoriesByCountry = {
       Guatemala: {
         "PS5-G": 0.00053,
-        "GIFTCARD-G-25": 0.04,
-        "GIFTCARD-G-50": 0.03,
+        "GIFTCARD-G-25": 0.1,
+        "GIFTCARD-G-50": 0.05,
         "GIFTCARD-G-100": 0.01,
-        "PIZZA-G": 0.05,
+        "PIZZA-G": 0.2,
       },
       "El Salvador": {
         "PS5-S": 0.0006988,
-        "GIFTCARD-S-25": 0.04,
-        "GIFTCARD-S-50": 0.03,
+        "GIFTCARD-S-25": 0.1,
+        "GIFTCARD-S-50": 0.05,
         "GIFTCARD-S-100": 0.01,
-        "PIZZA-S": 0.05,
+        "PIZZA-S": 0.2,
       },
     };
 
@@ -658,7 +658,7 @@ async function redeemTicketPizzaCampero(req, res) {
     let accumulatedProbability = 0;
 
     for (const [key, value] of Object.entries(categories)) {
-      accumulatedProbability += value;
+      accumulatedProbability += value * 100; // Convertir la probabilidad a un rango de 0 a 100
       if (randomNumber < accumulatedProbability) {
         category = key;
         break;
