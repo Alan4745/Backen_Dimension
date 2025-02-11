@@ -107,12 +107,16 @@ async function RegistrarData(req, res) {
 
 async function ObtenerGanadores(req, res) {
   try {
-    const { filtro, pais, page = 1, limit = 100 } = req.query;
+    const {
+      filtro,
+      pais,
+      page = 1,
+      limit = 100,
+      fechaInicio,
+      fechaFin,
+    } = req.query;
 
     let match = { winner: true };
-    if (pais && (pais === "Guatemala" || pais === "El Salvador")) {
-      match.country = pais;
-    }
 
     if (filtro && filtro !== "todos") {
       match.prize = filtro;
@@ -120,10 +124,28 @@ async function ObtenerGanadores(req, res) {
       match = {}; // Obtener todos los registros sin filtrar por winner
     }
 
+    if (pais && (pais === "Guatemala" || pais === "El Salvador")) {
+      match.country = pais;
+    }
+
+    // 🔹 Agregar filtro por rango de fechas correctamente
+    if (fechaInicio || fechaFin) {
+      match.createdAt = {};
+      if (fechaInicio) {
+        match.createdAt.$gte = new Date(fechaInicio + "T00:00:00.000Z"); // Asegurar inicio del día
+      }
+      if (fechaFin) {
+        match.createdAt.$lte = new Date(fechaFin + "T23:59:59.999Z"); // Asegurar fin del día
+      }
+    }
+
+    // console.log("Filtro aplicado:", JSON.stringify(match, null, 2));
+
     const skip = (page - 1) * limit;
 
     const pipeline = [
       { $match: match },
+      { $sort: { createdAt: -1 } }, // Ordenar por fecha descendente
       { $skip: skip },
       { $limit: parseInt(limit) },
       {
@@ -142,18 +164,23 @@ async function ObtenerGanadores(req, res) {
 
     const datos = await PizzaCamperoDataModel.aggregate(pipeline);
 
-    const totalParticipaciones = datos.reduce(
-      (acc, curr) => acc + curr.totalTicketsCollected,
-      0
-    );
-
     const totalRegistros = await PizzaCamperoDataModel.countDocuments(match);
+
+    const totalParticipacionesGeneral = await PizzaCamperoDataModel.aggregate([
+      { $match: match },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: { $size: { $ifNull: ["$ticketsCollected", []] } } },
+        },
+      },
+    ]);
 
     res.status(200).json({
       success: true,
       data: datos,
-      totalParticipaciones,
       totalRegistros,
+      totalParticipacionesGeneral: totalParticipacionesGeneral[0]?.total || 0,
       totalPages: Math.ceil(totalRegistros / limit),
       currentPage: parseInt(page),
     });
@@ -161,8 +188,7 @@ async function ObtenerGanadores(req, res) {
     console.error("Error al obtener los datos:", error);
     res.status(500).json({
       success: false,
-      message:
-        "Error interno del servidor. Por favor, inténtelo de nuevo más tarde.",
+      message: "Error interno del servidor. Inténtelo de nuevo más tarde.",
     });
   }
 }
