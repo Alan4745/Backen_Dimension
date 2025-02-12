@@ -10,4 +10,6 @@ api.post("/RegistrarDataPizza", controllerRegistrarData.RegistrarData);
 // por ejemplo esta ess para obtener todos los datos http://localhost:3000/api/ObtenerGanadores?filtro=todos
 api.get("/ObtenerGanadores", controllerRegistrarData.ObtenerGanadores);
 
+// api.get("/GenerarReporteExcel", controllerRegistrarData.GenerarReporteExcel);
+
 module.exports = api;

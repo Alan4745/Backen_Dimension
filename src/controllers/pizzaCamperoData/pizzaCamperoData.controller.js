@@ -1,5 +1,7 @@
 const PizzaCamperoDataModel = require("../../models/DatapizzaCampero/pizzaCamperoData.model");
 const validator = require("validator"); // Asegúrate de instalar la librería validator
+const moment = require("moment-timezone");
+const ExcelJS = require("exceljs");
 
 async function RegistrarData(req, res) {
   try {
@@ -128,24 +130,28 @@ async function ObtenerGanadores(req, res) {
       match.country = pais;
     }
 
-    // 🔹 Agregar filtro por rango de fechas correctamente
+    // 🔹 Convertir fechas a UTC desde la zona horaria de Guatemala
     if (fechaInicio || fechaFin) {
       match.createdAt = {};
       if (fechaInicio) {
-        match.createdAt.$gte = new Date(fechaInicio + "T00:00:00.000Z"); // Asegurar inicio del día
+        match.createdAt.$gte = moment
+          .tz(fechaInicio + "T00:00:00", "America/Guatemala")
+          .utc()
+          .toDate();
       }
       if (fechaFin) {
-        match.createdAt.$lte = new Date(fechaFin + "T23:59:59.999Z"); // Asegurar fin del día
+        match.createdAt.$lte = moment
+          .tz(fechaFin + "T23:59:59", "America/Guatemala")
+          .utc()
+          .toDate();
       }
     }
-
-    // console.log("Filtro aplicado:", JSON.stringify(match, null, 2));
 
     const skip = (page - 1) * limit;
 
     const pipeline = [
       { $match: match },
-      { $sort: { createdAt: -1 } }, // Ordenar por fecha descendente
+      { $sort: { createdAt: -1 } },
       { $skip: skip },
       { $limit: parseInt(limit) },
       {
@@ -157,7 +163,7 @@ async function ObtenerGanadores(req, res) {
       },
       {
         $project: {
-          ticketsCollected: 0, // Excluir el campo ticketsCollected
+          ticketsCollected: 0,
         },
       },
     ];
@@ -193,7 +199,84 @@ async function ObtenerGanadores(req, res) {
   }
 }
 
+async function GenerarReporteExcel(req, res) {
+  try {
+    const { fechaInicio, fechaFin } = req.query;
+
+    let match = {};
+
+    // 🔹 Convertir fechas a UTC desde la zona horaria de Guatemala
+    if (fechaInicio || fechaFin) {
+      match.createdAt = {};
+      if (fechaInicio) {
+        match.createdAt.$gte = moment
+          .tz(fechaInicio + "T00:00:00", "America/Guatemala")
+          .utc()
+          .toDate();
+      }
+      if (fechaFin) {
+        match.createdAt.$lte = moment
+          .tz(fechaFin + "T23:59:59", "America/Guatemala")
+          .utc()
+          .toDate();
+      }
+    }
+
+    const datos = await PizzaCamperoDataModel.find(match);
+
+    // Crear un nuevo libro de Excel
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Reporte de Ganadores");
+
+    // Añadir encabezados
+    worksheet.columns = [
+      { header: "Nombre", key: "name", width: 30 },
+      { header: "Email", key: "email", width: 30 },
+      { header: "Teléfono", key: "phone", width: 15 },
+      { header: "DPI", key: "dpi", width: 20 },
+      { header: "País", key: "country", width: 15 },
+      { header: "Premio", key: "prize", width: 20 },
+      { header: "Fecha de Creación", key: "createdAt", width: 25 },
+    ];
+
+    // Añadir filas
+    datos.forEach((item) => {
+      worksheet.addRow({
+        name: item.name,
+        email: item.email,
+        phone: item.phone,
+        dpi: item.dpi,
+        country: item.country,
+        prize: item.prize,
+        createdAt: moment(item.createdAt).format("YYYY-MM-DD HH:mm:ss"),
+      });
+    });
+
+    // Configurar el tipo de contenido y el nombre del archivo
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=Reporte_Ganadores.xlsx"
+    );
+
+    // Enviar el archivo Excel
+    await workbook.xlsx.write(res);
+    res.end();
+  } catch (error) {
+    console.error("Error al generar el reporte Excel:", error);
+    res.status(500).json({
+      success: false,
+      message:
+        "Error interno del servidor. Por favor, inténtelo de nuevo más tarde.",
+    });
+  }
+}
+
 module.exports = {
   RegistrarData,
   ObtenerGanadores,
+  GenerarReporteExcel,
 };
