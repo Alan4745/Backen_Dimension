@@ -229,9 +229,19 @@ async function ObtenerGanadores(req, res) {
 
 async function GenerarReporteExcel(req, res) {
   try {
-    const { fechaInicio, fechaFin } = req.query;
+    const { filtro, pais, fechaInicio, fechaFin } = req.query;
 
-    let match = {};
+    let match = { winner: true };
+
+    if (filtro && filtro !== "todos") {
+      match.prize = filtro;
+    } else if (filtro === "todos") {
+      match = {}; // Obtener todos los registros sin filtrar por winner
+    }
+
+    if (pais && (pais === "Guatemala" || pais === "El Salvador")) {
+      match.country = pais;
+    }
 
     // 🔹 Convertir fechas a UTC desde la zona horaria de Guatemala
     if (fechaInicio || fechaFin) {
@@ -265,6 +275,7 @@ async function GenerarReporteExcel(req, res) {
       { header: "País", key: "country", width: 15 },
       { header: "Premio", key: "prize", width: 20 },
       { header: "Fecha de Creación", key: "createdAt", width: 25 },
+      { header: "Fecha de Actualización", key: "updatedAt", width: 25 },
     ];
 
     // Añadir filas
@@ -277,8 +288,12 @@ async function GenerarReporteExcel(req, res) {
         country: item.country,
         prize: item.prize,
         createdAt: moment(item.createdAt).format("YYYY-MM-DD HH:mm:ss"),
+        updatedAt: moment(item.updatedAt).format("YYYY-MM-DD HH:mm:ss"),
       });
     });
+
+    // Obtener la fecha y hora actual del servidor
+    const fechaHoraActual = moment().format("YYYYMMDD_HHmmss");
 
     // Configurar el tipo de contenido y el nombre del archivo
     res.setHeader(
@@ -287,7 +302,7 @@ async function GenerarReporteExcel(req, res) {
     );
     res.setHeader(
       "Content-Disposition",
-      "attachment; filename=Reporte_Ganadores.xlsx"
+      `attachment; filename=Reporte_Ganadores_${fechaHoraActual}.xlsx`
     );
 
     // Enviar el archivo Excel
