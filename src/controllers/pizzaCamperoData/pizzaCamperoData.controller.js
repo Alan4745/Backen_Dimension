@@ -287,13 +287,19 @@ async function GenerarReporteExcel(req, res) {
         dpi: item.dpi,
         country: item.country,
         prize: item.prize,
-        createdAt: moment(item.createdAt).format("YYYY-MM-DD HH:mm:ss"),
-        updatedAt: moment(item.updatedAt).format("YYYY-MM-DD HH:mm:ss"),
+        createdAt: moment(item.createdAt)
+          .tz("America/Guatemala")
+          .format("YYYY-MM-DD HH:mm:ss"),
+        updatedAt: moment(item.updatedAt)
+          .tz("America/Guatemala")
+          .format("YYYY-MM-DD HH:mm:ss"),
       });
     });
 
-    // Obtener la fecha y hora actual del servidor
-    const fechaHoraActual = moment().format("YYYYMMDD_HHmmss");
+    // Obtener la fecha y hora actual del servidor en la zona horaria de Guatemala
+    const fechaHoraActual = moment()
+      .tz("America/Guatemala")
+      .format("YYYYMMDD_HHmmss");
 
     // Configurar el tipo de contenido y el nombre del archivo
     res.setHeader(
