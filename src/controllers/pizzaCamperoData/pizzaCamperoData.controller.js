@@ -159,6 +159,34 @@ async function ObtenerGanadores(req, res) {
           totalTicketsCollected: {
             $size: { $ifNull: ["$ticketsCollected", []] },
           },
+          createdAtFecha: {
+            $dateToString: {
+              format: "%Y-%m-%d",
+              date: { $toDate: "$createdAt" },
+              timezone: "America/Guatemala",
+            },
+          },
+          createdAtHora: {
+            $dateToString: {
+              format: "%H:%M:%S",
+              date: { $toDate: "$createdAt" },
+              timezone: "America/Guatemala",
+            },
+          },
+          updatedAtFecha: {
+            $dateToString: {
+              format: "%Y-%m-%d",
+              date: { $toDate: "$updatedAt" },
+              timezone: "America/Guatemala",
+            },
+          },
+          updatedAtHora: {
+            $dateToString: {
+              format: "%H:%M:%S",
+              date: { $toDate: "$updatedAt" },
+              timezone: "America/Guatemala",
+            },
+          },
         },
       },
       {
