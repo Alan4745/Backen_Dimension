@@ -118,17 +118,21 @@ async function ObtenerGanadores(req, res) {
       fechaFin,
     } = req.query;
 
-    let match = { winner: true };
+    let match = {};
 
-    if (filtro && filtro !== "todos") {
+    if (filtro && filtro !== "todos" && filtro !== "ganadores") {
       match.prize = filtro;
     } else if (filtro === "todos") {
       match = {}; // Obtener todos los registros sin filtrar por winner
+    } else if (filtro === "ganadores") {
+      match.winner = true;
     }
 
     if (pais && (pais === "Guatemala" || pais === "El Salvador")) {
       match.country = pais;
     }
+
+    console.log("match", match);
 
     // 🔹 Convertir fechas a UTC desde la zona horaria de Guatemala
     if (fechaInicio || fechaFin) {
@@ -231,12 +235,14 @@ async function GenerarReporteExcel(req, res) {
   try {
     const { filtro, pais, fechaInicio, fechaFin } = req.query;
 
-    let match = { winner: true };
+    let match = {};
 
-    if (filtro && filtro !== "todos") {
+    if (filtro && filtro !== "todos" && filtro !== "ganadores") {
       match.prize = filtro;
     } else if (filtro === "todos") {
       match = {}; // Obtener todos los registros sin filtrar por winner
+    } else if (filtro === "ganadores") {
+      match.winner = true;
     }
 
     if (pais && (pais === "Guatemala" || pais === "El Salvador")) {
