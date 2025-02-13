@@ -266,7 +266,15 @@ async function GenerarReporteExcel(req, res) {
       }
     }
 
-    const datos = await PizzaCamperoDataModel.find(match);
+    let datos;
+    if (filtro === "ganadores") {
+      datos = await PizzaCamperoDataModel.find(match).sort({
+        prize: 1,
+        createdAt: 1,
+      });
+    } else {
+      datos = await PizzaCamperoDataModel.find(match);
+    }
 
     // Crear un nuevo libro de Excel
     const workbook = new ExcelJS.Workbook();
