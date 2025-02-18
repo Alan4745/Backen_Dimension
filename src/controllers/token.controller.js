@@ -629,20 +629,35 @@ async function redeemTicketPizzaCampero(req, res) {
 
     // Definir las categorías y sus probabilidades según el país
     // Definir las categorías y sus probabilidades según el país
+    // Guatemala: {
+    //   "PS5-G": 0.00001, // 0.001%
+    //   "GIFTCARD-G-100": 0.0005, // 0.05%
+    //   "GIFTCARD-G-50": 0.002, // 0.2%
+    //   "GIFTCARD-G-25": 0.0025, // 0.25%
+    //   "PIZZA-G": 0.01, // 1%
+    // },
+    // "El Salvador": {
+    //   "PS5-S": 0.00002, // 0.002%
+    //   "GIFTCARD-S-100": 0.0005, // 0.05%
+    //   "GIFTCARD-S-50": 0.002, // 0.2%
+    //   "GIFTCARD-S-25": 0.0025, // 0.25%
+    //   "PIZZA-S": 0.01, // 1%
+    // },
+
     const categoriesByCountry = {
       Guatemala: {
-        "PS5-G": 0.00001, // 0.001%
-        "GIFTCARD-G-100": 0.0005, // 0.05%
-        "GIFTCARD-G-50": 0.002, // 0.2%
-        "GIFTCARD-G-25": 0.0025, // 0.25%
-        "PIZZA-G": 0.01, // 1%
+        "PS5-G": 0, // 0%
+        "GIFTCARD-G-100": 0, // 0%
+        "GIFTCARD-G-50": 0, // 0%
+        "GIFTCARD-G-25": 0, // 0%
+        "PIZZA-G": 0, // 0%
       },
       "El Salvador": {
-        "PS5-S": 0.00002, // 0.002%
-        "GIFTCARD-S-100": 0.0005, // 0.05%
-        "GIFTCARD-S-50": 0.002, // 0.2%
-        "GIFTCARD-S-25": 0.0025, // 0.25%
-        "PIZZA-S": 0.01, // 1%
+        "PS5-S": 0, // 0%
+        "GIFTCARD-S-100": 0, // 0%
+        "GIFTCARD-S-50": 0, // 0%
+        "GIFTCARD-S-25": 0, // 0%
+        "PIZZA-S": 0, // 0%
       },
     };
 
