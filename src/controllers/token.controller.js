@@ -652,7 +652,7 @@ async function redeemTicketPizzaCampero(req, res) {
         "PIZZA-G": 0, // 10%
       },
       "El Salvador": {
-        "PS5-S": 0.8, // 1%
+        "PS5-S": 0, // 1%
         "GIFTCARD-S-100": 0, // 1%
         "GIFTCARD-S-50": 0, // 4%
         "GIFTCARD-S-25": 0, // 5%
