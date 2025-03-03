@@ -12,6 +12,7 @@ const { default: mongoose } = require("mongoose");
 const PotentialUsers = require("../models/potentialUsers/potentialUsers.model");
 
 const PizzaCamperoDataModel = require("../models/DatapizzaCampero/pizzaCamperoData.model");
+const ChokisDataModel = require("../models/DataChokis/chokisData.model");
 
 // function agregarTokenAColecion(req, res) {
 //   const parameters = req.body;
@@ -766,6 +767,105 @@ async function redeemTicketPizzaCampero(req, res) {
   }
 }
 
+async function redeemTicketChokis(req, res) {
+  try {
+    const idbuyer = req.params.idbuyer; // ID del documento ChokisData a actualizar
+
+    console.log("ID del comprador:", idbuyer);
+
+    // Buscar el documento ChokisData correspondiente al idbuyer
+    const chokisData = await ChokisDataModel.findOne({
+      _id: idbuyer,
+    });
+    if (!chokisData) {
+      console.log("No se encontró el Usuario con ID:", idbuyer);
+      return res.status(404).json({ message: "No se encontró el comprador" });
+    }
+
+    // Verificar si el comprador ya ha ganado
+    if (chokisData.winner === true) {
+      console.log("El comprador ya ha ganado un premio.");
+      return res.status(400).json({
+        message: "Ya has ganado un premio.",
+      });
+    }
+
+    // Verificar si el comprador ya ha intentado dos veces
+    if (chokisData.ticketsCollected.length >= 2) {
+      console.log("El comprador ya ha alcanzado el límite de intentos.");
+      return res.status(400).json({
+        message: "Ya se te acabaron los intentos.",
+      });
+    }
+
+    // Definir las nuevas categorías
+    const categories = ["CALCETINES", "GALLETAS"];
+
+    // Generar un número aleatorio para seleccionar la categoría
+    const randomIndex = Math.floor(Math.random() * categories.length);
+    const category = categories[randomIndex];
+
+    console.log(`Buscando ticket de "${category}"...`);
+
+    // Buscar un ticket disponible de la categoría determinada y autor específico
+    let ticket = await TokenCollection.findOne({
+      canjeado: false,
+      category: category,
+      author: "679bab6ef2a4d19079f7a4d2",
+    });
+
+    // Si no hay tickets de la categoría determinada, buscar un ticket de "participacion"
+    if (!ticket) {
+      console.log(
+        `No se encontró ticket de "${category}". Buscando ticket de "participacion"...`
+      );
+      ticket = await TokenCollection.findOne({
+        canjeado: false,
+        category: "participacion",
+        author: "679bab6ef2a4d19079f7a4d2",
+      });
+    }
+
+    if (!ticket) {
+      console.log("No se encontró ningún ticket disponible para canjear.");
+      return res
+        .status(404)
+        .json({ message: "No hay tickets disponibles para canjear" });
+    }
+
+    // Actualizar el ticket encontrado
+    ticket.canjeado = true;
+    ticket.buyerid = idbuyer;
+    ticket.adquirido = true;
+    await ticket.save();
+    console.log("Ticket actualizado y guardado.");
+
+    // Actualizar el campo winner en el documento ChokisData
+    chokisData.winner = categories.includes(category);
+    chokisData.hasRegistered = true;
+    if (categories.includes(category)) {
+      chokisData.prize = category;
+    }
+
+    chokisData.ticketsCollected.push(ticket);
+
+    // Guardar los cambios en el documento ChokisData
+    await chokisData.save();
+    console.log("Datos del comprador actualizados y guardados.");
+
+    // Devolver el ticket actualizado como respuesta
+    res.status(200).json({
+      message: "Ticket canjeado exitosamente",
+      ticket,
+      registro: chokisData,
+    });
+  } catch (error) {
+    console.log("Error en la operación:", error.message);
+    // Manejo de errores
+    res.status(500).json({ error: error.message });
+  }
+}
+
 async function burnTicket(req, res) {
   try {
     const idDocumento = req.params.idTicket; // ID del documento a actualizar
@@ -984,4 +1084,5 @@ module.exports = {
   getCollectionsByAuthorId,
 
   redeemTicketPizzaCampero,
+  redeemTicketChokis,
 };
