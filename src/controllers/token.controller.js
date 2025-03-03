@@ -811,7 +811,7 @@ async function redeemTicketChokis(req, res) {
     let ticket = await TokenCollection.findOne({
       canjeado: false,
       category: category,
-      author: "679bab6ef2a4d19079f7a4d2",
+      author: "67c54d6892a89d8c54f57f90",
     });
 
     // Si no hay tickets de la categoría determinada, buscar un ticket de "participacion"
@@ -822,7 +822,7 @@ async function redeemTicketChokis(req, res) {
       ticket = await TokenCollection.findOne({
         canjeado: false,
         category: "participacion",
-        author: "679bab6ef2a4d19079f7a4d2",
+        author: "67c54d6892a89d8c54f57f90",
       });
     }
 
