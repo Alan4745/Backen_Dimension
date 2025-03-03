@@ -6,6 +6,6 @@ const api = express.Router();
 
 api.post("/RegistrarDataChokis", controllerChokis.guardarDatos);
 
-api.get("/ObtenerDatos", controllerChokis.obtenerGanadores);
+api.get("/ObtenerDatos", controllerChokis.obtenerData);
 
 module.exports = api;

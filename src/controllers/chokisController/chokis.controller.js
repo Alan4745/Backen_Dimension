@@ -80,7 +80,7 @@ const guardarDatos = async (req, res) => {
   }
 };
 
-const obtenerGanadores = async (req, res) => {
+const obtenerData = async (req, res) => {
   try {
     const { filtro, page = 1, limit = 100, fechaInicio, fechaFin } = req.query;
 
@@ -193,5 +193,5 @@ const obtenerGanadores = async (req, res) => {
 
 module.exports = {
   guardarDatos,
-  obtenerGanadores,
+  obtenerData,
 };
