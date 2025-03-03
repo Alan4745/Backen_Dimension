@@ -52,14 +52,14 @@ const guardarDatos = async (req, res) => {
     }
 
     // Calcular la edad a partir de la fecha de nacimiento
-    const edad = calcularEdad(fechaNacimiento);
+    // const edad = calcularEdad(fechaNacimiento);
 
     // Crear una nueva instancia del modelo con los datos recibidos
     const nuevoRegistro = new ChokisModel({
       nombreCompleto,
-      fechaNacimiento,
+      // fechaNacimiento,
       correo,
-      edad,
+      // edad,
     });
 
     // Guardar el nuevo registro en la base de datos

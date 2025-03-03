@@ -10,7 +10,6 @@ const chokisDataSchema = new Schema(
     },
     fechaNacimiento: {
       type: Date,
-      required: true,
     },
     correo: {
       type: String,
@@ -19,7 +18,6 @@ const chokisDataSchema = new Schema(
     },
     edad: {
       type: Number,
-      required: true,
       min: 0,
     },
     ticketsCollected: {
