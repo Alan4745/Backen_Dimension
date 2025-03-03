@@ -790,6 +790,13 @@ async function redeemTicketChokis(req, res) {
       });
     }
 
+    if (chokisData.ticketsCollected.length >= 2) {
+      console.log("El comprador ya ha alcanzado el límite de intentos.");
+      return res.status(400).json({
+        message: "Ya se te acabaron los intentos.",
+      });
+    }
+
     // Definir las categorías y sus probabilidades
     const categories = {
       CALCETINES: 0.05, // 5%
