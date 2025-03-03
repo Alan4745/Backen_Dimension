@@ -790,20 +790,27 @@ async function redeemTicketChokis(req, res) {
       });
     }
 
-    // Verificar si el comprador ya ha intentado dos veces
-    if (chokisData.ticketsCollected.length >= 2) {
-      console.log("El comprador ya ha alcanzado el límite de intentos.");
-      return res.status(400).json({
-        message: "Ya se te acabaron los intentos.",
-      });
+    // Definir las categorías y sus probabilidades
+    const categories = {
+      CALCETINES: 0.05, // 5%
+      GALLETAS: 0.1, // 10%
+    };
+
+    // Generar un número aleatorio entre 0 y 100
+    const randomNumber = Math.random() * 100;
+    console.log("Número aleatorio generado:", randomNumber);
+
+    // Determinar la categoría del ticket basado en la probabilidad
+    let category = "participacion"; // Por defecto es participación
+    let accumulatedProbability = 0;
+
+    for (const [key, value] of Object.entries(categories)) {
+      accumulatedProbability += value * 100; // Convertir la probabilidad a un rango de 0 a 100
+      if (randomNumber < accumulatedProbability) {
+        category = key;
+        break;
+      }
     }
-
-    // Definir las nuevas categorías
-    const categories = ["CALCETINES", "GALLETAS"];
-
-    // Generar un número aleatorio para seleccionar la categoría
-    const randomIndex = Math.floor(Math.random() * categories.length);
-    const category = categories[randomIndex];
 
     console.log(`Buscando ticket de "${category}"...`);
 
@@ -824,6 +831,7 @@ async function redeemTicketChokis(req, res) {
         category: "participacion",
         author: "67c54d6892a89d8c54f57f90",
       });
+      category = "participacion"; // Confirmar que encontramos un ticket de "participacion"
     }
 
     if (!ticket) {
@@ -841,9 +849,9 @@ async function redeemTicketChokis(req, res) {
     console.log("Ticket actualizado y guardado.");
 
     // Actualizar el campo winner en el documento ChokisData
-    chokisData.winner = categories.includes(category);
+    chokisData.winner = ["CALCETINES", "GALLETAS"].includes(category);
     chokisData.hasRegistered = true;
-    if (categories.includes(category)) {
+    if (["CALCETINES", "GALLETAS"].includes(category)) {
       chokisData.prize = category;
     }
 
