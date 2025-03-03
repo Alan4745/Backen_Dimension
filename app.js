@@ -17,7 +17,8 @@ const messageChannelRouter = require("./src/routes/messageChannel.routes");
 const tokenRouter = require("./src/routes/token.routes");
 const StatisticRouter = require("./src/routes/Statistic/Statistic.routes");
 const PotentialUserRouter = require("./src/routes/potentialUsers/potentialUsers.routes");
-const RegistrarDataRouter = require("./src/routes/getdata/PizzaCamperoData.routes");
+// const RegistrarDataRouter = require("./src/routes/getdata/PizzaCamperoData.routes");
+const ChokisRouter = require("./src/routes/chokis.route/Chokis.routes");
 
 const paymentRouter = require("./src/routes/payment/payment.routes");
 
@@ -74,7 +75,7 @@ app.use(
   tokenRouter, // Rutas para tokens
   checkout, //ruta de cobro
   paymentRouter, // ruta de pagos (stripe)
-  RegistrarDataRouter
+  ChokisRouter
 );
 
 // Exportamos la instancia de la aplicacion
