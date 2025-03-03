@@ -68,8 +68,7 @@ const guardarDatos = async (req, res) => {
     // Enviar una respuesta exitosa
     res.status(201).json({
       success: true,
-      message: "Datos guardados exitosamente",
-      data: nuevoRegistro,
+      message: nuevoRegistro,
     });
   } catch (error) {
     console.error("Error al guardar los datos:", error);
