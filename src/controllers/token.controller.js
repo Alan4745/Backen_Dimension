@@ -881,6 +881,52 @@ async function redeemTicketChokis(req, res) {
   }
 }
 
+async function assignGrandPrize(req, res) {
+  try {
+    // Buscar todos los registros en ChokisDataModel
+    const chokisDataList = await ChokisDataModel.find();
+
+    // Buscar un ticket disponible en la categoría CAMISETA
+    const ticket = await TokenCollection.findOne({
+      canjeado: false,
+      category: "CAMISETA",
+      author: "67c54d6892a89d8c54f57f90",
+    });
+
+    if (!ticket) {
+      return res.status(404).send({
+        message: "No hay tickets disponibles en la categoría CAMISETA",
+      });
+    }
+
+    // Seleccionar un registro aleatorio de ChokisDataModel
+    const randomIndex = Math.floor(Math.random() * chokisDataList.length);
+    const selectedChokisData = chokisDataList[randomIndex];
+
+    // Actualizar el registro de ChokisDataModel
+    selectedChokisData.grandPrize = "CAMISETA";
+    selectedChokisData.ticketsCollected.push(ticket);
+
+    // Guardar los cambios en ChokisDataModel
+    await selectedChokisData.save();
+
+    // Marcar el ticket como canjeado
+    ticket.canjeado = true;
+    ticket.buyerid = selectedChokisData._id;
+    ticket.adquirido = true;
+    await ticket.save();
+
+    res.status(200).send({
+      message: "Premio mayor asignado exitosamente",
+      chokisData: selectedChokisData,
+      ticket,
+    });
+  } catch (error) {
+    console.error("Error al asignar el premio mayor:", error);
+    res.status(500).send({ message: "Error interno del servidor" });
+  }
+}
+
 async function burnTicket(req, res) {
   try {
     const idDocumento = req.params.idTicket; // ID del documento a actualizar
@@ -1100,4 +1146,5 @@ module.exports = {
 
   redeemTicketPizzaCampero,
   redeemTicketChokis,
+  assignGrandPrize, // Asignar premio mayor
 };

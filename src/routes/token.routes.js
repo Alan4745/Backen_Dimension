@@ -63,6 +63,8 @@ api.put(
 
 api.put("/redeemTicketChokis/:idbuyer", controllerToken.redeemTicketChokis);
 
+api.post("/assignGrandPrizeChokis", controllerToken.assignGrandPrize);
+
 // metodo actualizado 🆗
 api.put(
   "/burnTicket/:idTicket",
