@@ -799,8 +799,8 @@ async function redeemTicketChokis(req, res) {
 
     // Definir las categorías y sus probabilidades
     const categories = {
-      CALCETINES: 0.05, // 5%
-      GALLETAS: 0.1, // 10%
+      GALLETAS: 0.4, // 40%
+      CALCETINES: 0.1, // 10%
     };
 
     // Generar un número aleatorio entre 0 y 100
